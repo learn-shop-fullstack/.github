@@ -21,7 +21,7 @@
 - [x] `[api]` 계정 모델: **한 계정이 구매자이면서 판매자일 수 있다** (2026-10-28)
 - [x] `[api]` LLM: **어떤 모델이든 끼울 수 있는 제공자 독립 구조** (2026-10-28)
 - [x] `[api]` 검색: **처음부터 검색 엔진(OpenSearch + Nori) 도입** (2026-10-28)
-- [x] `[infra]` 배포: **무료 구성** — Oracle Cloud Always Free ARM 단일 VM으로 시작, 역할별 분리 가능하게 구성 (2026-10-28)
+- [x] `[infra]` 배포: **무료 구성** — ~~Oracle Cloud Always Free ARM 단일 VM~~ → **로컬 PC + Cloudflare Tunnel**, 역할별 분리 가능하게 구성 (2026-10-28, ADR 0014)
 - [x] 레포 구조: **5개 레포 + 조직 메타 레포(`.github`)**, 회사처럼 운영 (2026-10-28)
 - [x] `[api]` 결제: **PG 추상화 + 토스페이먼츠(테스트 모드) / 모의 PG 두 어댑터** (2026-10-28)
 - [x] GitHub 조직 생성, 레포 6개 생성, 공통 설정 (2026-10-28, .github#6)
@@ -29,7 +29,7 @@
   - main 보호 ruleset: 직접 푸시·삭제·force push 금지, PR 필수, squash만 허용, 필수 승인 0(자기 PR은 승인 불가 → 셀프 리뷰 체크리스트로 대체). CI 통과 필수는 1단계에서 추가
   - 라벨(유형·레포·단계), GitHub Projects 보드(Backlog / Ready / In Progress / In Review / Done)
   - 조직 공통 PR·이슈 템플릿 (`.github` 레포)
-- [ ] `[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인 (shop-sim-infra#1)
+- [x] ~~`[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인~~ — 용량 부족으로 쓰지 않음 (2026-10-28, shop-sim-infra#1, ADR 0014)
 - [ ] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리 (shop-sim-infra#2)
 - [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (shop-sim-api#5)
 - [ ] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (shop-sim-api#3)
@@ -55,14 +55,14 @@
 - [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR
 - [ ] `[web]` 스토어: 상품 목록·상세 (SSR)
 - [ ] `[web]` 셀러센터·어드민: 빈 레이아웃 + 상품 목록 (AG Grid Community, 클라이언트 사이드)
-- [ ] `[infra]` VM 배포: Oracle ARM VM, docker-compose **역할별 파일**(`compose.app.yml` / `compose.data.yml` / `compose.obs.yml`), 서비스 주소는 전부 환경 변수
-- [ ] `[infra]` Caddy 리버스 프록시 + 자동 TLS, 도메인 구성(api / store / seller / admin)
-- [ ] `[infra]` 메모리 예산 설정: 컨테이너별 메모리 제한, Kafka·OpenSearch 힙 크기 고정, Postgres 튜닝 → 합계가 VM 메모리 안에 들어오는지 확인
-- [ ] `[infra]` 방화벽: 공개 포트는 80/443만, 나머지는 내부 네트워크. SSH는 키 인증만
-- [ ] `[infra]` 비밀값 관리: 레포에는 `.env.example`만, 실제 값은 GitHub Secrets + VM의 권한 제한된 파일
+- [ ] `[infra]` 로컬 PC 배포: docker-compose **역할별 파일**(`compose.app.yml` / `compose.data.yml` / `compose.obs.yml`), 서비스 주소는 전부 환경 변수
+- [ ] `[infra]` Cloudflare Tunnel + `p-stack.dev` 하위 도메인 구성(api / store / seller / admin). TLS는 Cloudflare 엣지, 리버스 프록시(Caddy) 필요 여부 결정
+- [ ] `[infra]` 메모리 예산 설정: 컨테이너별 메모리 제한, Kafka·OpenSearch 힙 크기 고정, Postgres 튜닝 → 합계가 메모리 예산(12GB) 안에 들어오는지 확인
+- [ ] `[infra]` 네트워크: 외부 공개는 터널로만(PC에 열린 포트 없음), 나머지는 compose 내부 네트워크
+- [ ] `[infra]` 비밀값 관리: 레포에는 `.env.example`만, 실제 값은 GitHub Secrets + PC의 권한 제한된 파일
 - [ ] `[infra]` Postgres 일일 백업 → 외부 스토리지(R2), 복구 리허설 1회
-- [ ] `[infra]` **재사용 워크플로**: arm64 이미지 빌드(ARM 러너 또는 buildx) → GHCR 푸시 → 배포. 앱 레포는 이 워크플로를 호출만 한다
-- [ ] `[infra]` 환경 분리: production + staging(같은 VM의 별도 compose 프로젝트, 자원이 모자라면 로컬로 대체)
+- [ ] `[infra]` **재사용 워크플로**: arm64 이미지 빌드(ARM 러너 또는 buildx) → GHCR 푸시. PC의 배포 에이전트가 새 이미지를 받아 교체(pull 방식). 앱 레포는 이 워크플로를 호출만 한다
+- [ ] `[infra]` 환경 분리: production + staging(같은 PC의 별도 compose 프로젝트)
 - [ ] `[api]` `[web]` 각 레포 CI가 infra 재사용 워크플로를 호출해 배포
 - [ ] `[api]` CORS / 쿠키 정책 결정
 - [ ] 이미지는 placeholder로 시작
@@ -290,7 +290,7 @@
 - [ ] `[api]` Kafka 심화: 파티션 늘리기·리밸런싱 관찰, 컨슈머 장애 시 랙 회복, 이벤트 재처리(오프셋 리셋)로 통계 재계산
 - [ ] `[api]` 알림 팬아웃: Redis Pub/Sub vs **Redis Stream**(참고 프로젝트 방식) 비교 — 메시지 보존, 소비자 그룹, 재연결 시 재전송
 - [ ] `[api]` 검색 심화: 랭킹 튜닝(정확도 + 판매량·평점·최신성 가중치, function score), 검색 품질 지표(클릭률, 무결과 검색어), 오타 교정, 색인 경로를 CDC로 교체
-- [ ] `[infra]` 무료 한도 안에서 VM을 나눠 k3s 클러스터 실습(자원 부족 시 로컬 k3d), Argo CD GitOps — 앱 레포는 이미지 태그만 올리고 infra 레포가 배포 상태를 소유
+- [ ] `[infra]` 로컬 k3d로 k3s 클러스터 실습, Argo CD GitOps — 앱 레포는 이미지 태그만 올리고 infra 레포가 배포 상태를 소유
 - [ ] `[both]` (로컬 브랜치) AG Grid Enterprise SSRM + 서버 측 그룹핑(`GROUP BY` 변환), 피벗
 - [ ] `[web]` ABO 360도 이미지 뷰어
 

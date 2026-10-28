@@ -65,20 +65,21 @@ learn-fullstack/        (git 레포 아님, 작업 공간)
 
 ## 배포 환경 (무료 구성)
 
-**목표 비용: 도메인을 제외하고 월 0원**
+**목표 비용: 월 0원** (ADR 0014, 보유 도메인 사용)
 
 | 용도 | 서비스 | 비고 |
 |---|---|---|
-| 서버 | Oracle Cloud **Always Free Ampere A1(ARM)** | 문서상 무료 한도 2 OCPU / 12GB(2026년 축소). 한도 안에서 VM 여러 대로 나눌 수 있음 |
+| 서버 | **로컬 PC**(Apple Silicon, arm64) + docker compose | staging·production은 같은 PC의 별도 compose 프로젝트 |
+| 외부 공개 | Cloudflare Tunnel(named tunnel) | 공유기 포트를 열지 않음. SSE는 `Content-Type: text/event-stream`이어야 스트리밍됨 |
 | 이미지 스토리지 | Cloudflare R2 무료 구간 | 이그레스 비용 없음 |
 | 컨테이너 레지스트리 | GitHub Container Registry | |
-| CI | GitHub Actions | arm64 이미지 빌드 |
+| CI | GitHub Actions | arm64 이미지 빌드 → GHCR 푸시까지. PC가 새 이미지를 받아 교체(pull 방식, self-hosted runner 없음) |
 | 에러 추적 | Sentry 무료 플랜 | 자체 호스팅하지 않음 |
 | 결제 | 토스페이먼츠 테스트 모드 + 모의 PG | 테스트 키는 실제 결제가 일어나지 않음 |
-| 부하 생성(shop-sim-loadtest) | 로컬 PC | 운영 VM 밖에서 돌려야 측정이 의미 있음 |
-| 도메인 | 유료 도메인(연 수천~만 원대) 또는 `sslip.io` 같은 IP 기반 무료 호스트명 | 유일하게 비용이 생길 수 있는 항목 |
+| 부하 생성(shop-sim-loadtest) | 로컬 PC(운영과 같은 기계) | CPU·메모리를 나눠 쓰므로 측정은 그 조건으로 해석 |
+| 도메인 | `p-stack.dev`(Cloudflare DNS) | 하위 도메인 구성은 1단계 |
 
-**12GB 메모리 예산 (목표치, 1단계에서 실측 후 조정)**
+**12GB 메모리 예산 (목표치, 운영 compose의 메모리 상한 합계. 1단계에서 실측 후 조정)**
 
 | 구성 | 예산 |
 |---|---|
@@ -88,23 +89,22 @@ learn-fullstack/        (git 레포 아님, 작업 공간)
 | OpenSearch | 1.5GB (힙 768MB) |
 | Node 앱 4개 + Next.js | 2GB |
 | 관측성 (Prometheus, Loki, OTel Collector) | 1.5GB |
-| Caddy, OS, 여유 | 나머지 약 4.5GB |
+| 프록시·터널, 여유 | 나머지 약 4.5GB |
 
 Kafka UI, OpenSearch Dashboards는 상시로 띄우지 않고 필요할 때만 실행한다.
 
 **단계별 토폴로지**
 
-- 1~12단계: ARM VM 1대 (2 OCPU / 12GB)
-- 13단계: 무료 한도를 쪼개 **관측성 VM 분리** (예: 앱+데이터 1 OCPU / 8GB, 관측성 1 OCPU / 4GB)
-- 14단계: 앱 / 데이터 / 관측성으로 나누고 k3s 클러스터 실습. 자원이 부족하면 로컬 k3d로 대체
+- 1~12단계: 로컬 PC 1대, 역할별 compose 파일
+- 13단계: **관측성을 별도 compose 프로젝트로 분리**하고 메모리 상한을 따로 건다
+- 14단계: 앱 / 데이터 / 관측성으로 나누고 로컬 k3d로 k3s 클러스터 실습
 
-**무료 구성의 위험과 대비**
+**로컬 PC 구성의 위험과 대비**
 
-- 무료 한도 정책이 바뀌었고 적용이 들쭉날쭉하다 → 콘솔의 비용·한도를 주기적으로 확인
-- 인기 리전은 ARM 인스턴스 생성이 "용량 부족"으로 실패하기 쉽다 → 생성 재시도, 다른 가용 도메인 시도
-- 무료 계정의 유휴 인스턴스 회수 정책이 있다 → 시뮬레이터가 상시 트래픽을 만들어 유휴 상태가 되지 않게 하고, 필요하면 종량제 계정으로 전환(한도 안이면 0원, 예산 알림 필수)
-- 플랜 B: Oracle을 못 쓰게 되면 로컬 PC에서 같은 compose 파일을 돌리고 Cloudflare Tunnel로 외부 공개
-- 모든 데이터는 재생성 가능하게: 시드 스크립트 + 시뮬레이터 + Postgres 백업으로 VM을 잃어도 하루 안에 복구
+- PC가 꺼지거나 잠들면 서비스와 시뮬레이터가 멈춘다 → 절전 해제 등 상시 가동 설정, 멈춤은 장애 실습으로 포스트모템에 남긴다
+- public 레포라 PC에 self-hosted runner를 두면 외부 PR이 PC에서 코드를 실행할 수 있다 → runner를 두지 않고 pull 방식으로 배포
+- 운영과 개발이 같은 기계다 → 운영 compose에 메모리 상한, 개발용 컨테이너는 운영과 다른 compose 프로젝트로
+- 모든 데이터는 재생성 가능하게: 시드 스크립트 + 시뮬레이터 + Postgres 백업(R2)으로 PC를 잃어도 하루 안에 복구
 
 ## 도메인 모델 (초안)
 

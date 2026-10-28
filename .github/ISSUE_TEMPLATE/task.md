@@ -1,5 +1,5 @@
 ---
-name: 작업
+name: 일반 작업
 about: 로드맵 항목이나 새 작업
 labels: ["type:task"]
 ---

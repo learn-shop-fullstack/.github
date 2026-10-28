@@ -1,7 +1,6 @@
 ---
 name: 작업
 about: 로드맵 항목이나 새 작업
-title: ""
 labels: ["type:task"]
 ---
 

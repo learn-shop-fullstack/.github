@@ -30,7 +30,7 @@
   - 라벨(유형·레포·단계), GitHub Projects 보드(Backlog / Ready / In Progress / In Review / Done)
   - 조직 공통 PR·이슈 템플릿 (`.github` 레포)
 - [x] ~~`[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인~~ — 용량 부족으로 쓰지 않음 (2026-10-28, shop-sim-infra#1, ADR 0014)
-- [ ] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리 (shop-sim-infra#2)
+- [x] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리 (2026-10-28, shop-sim-infra#2 — 이미지·태그 표는 이슈 댓글, MinIO는 배포 중단으로 SeaweedFS로 대체)
 - [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (shop-sim-api#5)
 - [x] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (2026-10-28, shop-sim-api#3, ADR 0005 유지)
 - [x] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인 (2026-10-28, shop-sim-api#4, ADR 0004 유지)
@@ -45,7 +45,7 @@
 
 목표: 상품 1개가 DB → API → 스토어/셀러센터/어드민 화면까지 흐르고, 양쪽 레포 모두 push 하면 자동 배포된다.
 
-- [ ] `[infra]` 로컬 개발용 docker-compose (Postgres, Redis, MinIO, Kafka KRaft 단일 노드 + Kafka UI, OpenSearch 단일 노드 + Nori 플러그인 + OpenSearch Dashboards) — 각 앱 레포가 이 compose를 띄워 개발
+- [ ] `[infra]` 로컬 개발용 docker-compose (Postgres, Redis, SeaweedFS(S3 호환, R2 대역), Kafka KRaft 단일 노드 + Kafka UI(kafbat), OpenSearch 단일 노드 + Nori 플러그인 + OpenSearch Dashboards) — 각 앱 레포가 이 compose를 띄워 개발
 - [ ] `[api]` Nest 프로젝트 세팅 (`api`, `worker` 앱)
 - [ ] `[api]` `openapi/` 스펙 작성: 헬스체크, 상품 단건/목록 조회
 - [ ] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인

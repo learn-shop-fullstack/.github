@@ -108,10 +108,11 @@ Kafka UI, OpenSearch Dashboards는 상시로 띄우지 않고 필요할 때만 �
 
 ## 도메인 모델 (초안)
 
+엔티티 목록의 원본. 테이블·관계·컬럼은 shop-sim-api `db/ERD.md`.
+
 **회원·판매자**
-- **User**: 일반 계정 (모든 계정은 구매자로 행동 가능)
-- **AdminUser**: 플랫폼 운영자 계정 (일반 계정과 분리, 운영 역할·권한)
-- **SocialAccount**: 제공자(Google / Kakao / Naver), 제공자 사용자 ID
+- **User / Session / Account**: 일반 계정(모든 계정은 구매자로 행동 가능)과 세션, 로그인 수단(비밀번호·Google·Kakao·Naver 각각 Account 1행). Better Auth가 관리(ADR 0015)
+- **AdminUser / AdminSession / AdminAccount**: 플랫폼 운영자 계정. 일반 계정과 분리된 별도 인증 인스턴스(ADR 0015)
 - **Seller / SellerApplication**: User와 1:1로 연결되는 판매자 프로필(스토어 정보), 입점 신청·심사 상태
 - **ShippingPolicy**: 판매자별 기본 배송비, 무료배송 기준, 출고지
 - **Address**: 구매자 배송지
@@ -120,35 +121,35 @@ Kafka UI, OpenSearch Dashboards는 상시로 띄우지 않고 필요할 때만 �
 - **Category**: 트리 구조
 - **Product**: 판매자, 이름, 부제, 카테고리, 타입(FINISHED / MADE_TO_ORDER), 가격, 할인율, 상세 본문(Tiptap JSON), 리드타임, 상태(draft/published/scheduled/suspended), version
 - **ProductImage**: 원본 키, 리사이즈 상태, 정렬 순서(0번이 대표)
-- **ProductOption / OptionValue / Sku**: 선택형 옵션 조합, 가격, 재고
+- **ProductOption / OptionValue / Sku / SkuOptionValue**: 선택형 옵션, SKU(옵션 값 조합, 옵션 추가금). 옵션 없는 상품도 기본 SKU 1개. 재고·가격·주문은 항상 SKU를 가리킨다
 - **CustomOptionField**: 자유 입력형 제작 옵션 정의
 - **ProductRevision**: 상세 본문 버전 이력
 - **RawMaterial**: 원재료(판매자 소유), 단위, 리드타임
 - **BillOfMaterial**: 제작상품 ↔ 원재료 소요량
 - **StockLot**: 완제품·원재료 로트, 수량, 입고일, 유효기한
-- **StockLedger**: 재고 변동 원장(입고, 예약, 확정 차감, 해제, 폐기, 조정)
+- **StockLedgerEntry**: 재고 변동 원장(입고, 예약, 확정 차감, 해제, 폐기, 조정)
 - **StockReservation**: 주문별 재고 예약 (reserved / confirmed / released)
 
 **주문·결제·배송**
-- **Cart / CartItem**
+- **Cart / CartItem**: 회원 전용(비회원 장바구니 없음)
 - **Checkout**: 결제 단위(주문서), 결제 기한
 - **Order**: 판매자별 주문(배송 단위), 상태, 배송비
 - **OrderItem**: 가격·할인·제작 옵션 입력값 스냅샷
 - **Payment / Refund**: PG 거래 ID, 상태, idempotency key
-- **Coupon / CouponIssue / CouponRedemption**: 발행 주체(플랫폼/판매자), 발급·사용 이력
+- **Coupon / CouponIssue / CouponRedemption**: 발행 주체(플랫폼/판매자), 발급·사용 이력. 사용은 Checkout에 기록하고 할인액은 OrderItem별 스냅샷
 - **OrderIssue / OrderIssueItem**: 취소·반품 요청 (요청 → 승인/거절 → 완료)
 - **Shipment**: 판매자별 주문 단위 택배사, 운송장 번호, 배송 상태, 출고 지연 사유, 마지막 동기화 시각
 
 **이벤트·실시간·소통**
 - **OutboxMessage / ProcessedMessage**: 아웃박스 이벤트, 멱등 컨슈머 처리 기록
 - **Notification / NotificationReceiver**: 알림 본문, 수신자별 읽음 상태
-- **ChatRoom / ChatMessage**: 구매자·판매자 쌍(유니크), 연결된 주문, 비정규화 필드 / 발신자, 유형(텍스트·주문 카드), 읽음 시각
+- **ChatRoom / ChatMessage**: 구매자·판매자 쌍(유니크), 비정규화 필드 / 발신자, 유형(텍스트·주문 카드), 주문 카드의 주문, 읽음 시각
 - **Notice / Faq / Inquiry / InquiryMessage / Report**: 고객센터
 
 **리뷰·분석·정산**
 - **Review / ReviewImage**
 - **ReviewSummary / ReviewSummaryRun**: 상품별 긍정·부정 요약, 마지막 반영 리뷰, 배치 실행 이력(처리·건너뜀·실패, 토큰 사용량)
-- **DailySales**: 상품별 일 판매량
+- **DailySales**: SKU별 일 판매량(상품 단위는 합산)
 - **DemandForecast / ReorderRecommendation**: 7일 예측값, 사용 모델·오차 / 재주문점, 추천 수량
 - **CommissionPolicy / Settlement / SettlementItem**: 수수료율, 판매자별 월 정산, 정산 대상 주문
 

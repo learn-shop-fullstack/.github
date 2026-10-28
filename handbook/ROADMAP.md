@@ -38,7 +38,7 @@
 - [x] `[api]` 도메인 모델(ERD) 초안 — 아래 "도메인 모델" 참고 (2026-10-28, shop-sim-api#8, shop-sim-api `db/ERD.md`)
 - [x] `[api]` 인증 라이브러리 POC: Better Auth — Nest 연동, ERD 규칙 스키마, DB 세션, 하위 도메인 쿠키, 운영자 계정 분리 (2026-10-28, shop-sim-api#17, ADR 0015)
 - [x] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제 (2026-10-28, shop-sim-api#6, ADR 0013)
-- [ ] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정 (shop-sim-api#7)
+- [x] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정 (2026-10-28, shop-sim-api#7, ADR 0016)
 - [ ] `[web]` API 클라이언트 생성 도구 결정 (shop-sim-web#1)
 
 ## 1단계 — 뼈대 배포 (Walking Skeleton)
@@ -92,7 +92,7 @@
 - [ ] `[api]` 편집 워크플로: 임시저장, 발행/예약 발행, 버전 이력(ProductRevision)
 - [ ] `[api]` 동시 편집 충돌 방지 (낙관적 락, version 컬럼 → 409 응답)
 - [ ] `[api]` **아웃박스 + Kafka 기반 구축** (상품 변경이 첫 번째 이벤트): 같은 트랜잭션에서 `outbox` 기록 → 폴링 릴레이 → `product.events` (키: `productId`). 5단계 주문 이벤트도 이 기반을 그대로 쓴다
-- [ ] `[api]` **이벤트 계약**: `product.events`를 AsyncAPI 스펙으로 먼저 정의(스키마, 버전 필드, 키) → 리뷰 → 구현. CI에서 이전 버전과의 호환성 검사
+- [ ] `[api]` **이벤트 계약**: `product.events`를 AsyncAPI 스펙으로 먼저 정의(스키마, `ce_type` 메이저 버전, 키 — `asyncapi/CONVENTIONS.md`) → 리뷰 → 구현. 호환성 스크립트(`poc/event-contract`)를 main으로 옮겨 CI 필수 검사로 건다(main과 양방향 비교)
 - [ ] `[api]` **검색 인덱스 설계 (OpenSearch)**
   - 분석기: `nori_tokenizer`(복합명사 `mixed` 모드) + 품사 필터 + 소문자화, 사용자 사전(브랜드·신조어), 동의어 사전
   - 매핑: 상품명·부제·브랜드·카테고리 경로·판매자명(텍스트), 가격·할인가·평점·리뷰 수·판매량(숫자), 상태·재고 유무(키워드)
@@ -139,7 +139,7 @@
 - [ ] `[api]` 결제 웹훅 멱등성 (idempotency key)
 - [ ] `[api]` 주문·결제 이벤트를 3단계 아웃박스 기반 위에 추가 (`order.events`, `payment.events`, 키: `orderId`) — AsyncAPI 스펙 먼저
 - [ ] `[api]` 주문·결제 이벤트 흐름: `OrderCreated` → (재고 예약 · 결제 정보 생성) → 결제 승인 → `PaymentCompleted` → 판매자별 주문·배송 정보 생성, 재고 확정, 상태 `PAID`
-- [ ] `[api]` Kafka 토픽 설계: 도메인 이벤트 토픽, 파티션 수, 보관 기간, 이벤트 스키마(버전 필드 포함)
+- [ ] `[api]` Kafka 토픽 설계: 도메인 이벤트 토픽, 파티션 수, 보관 기간, 이벤트 스키마(`ce_type` 메이저 버전, ADR 0016)
 - [ ] `[api]` **멱등 컨슈머**: 컨슈머 그룹별 `processed_messages` 테이블로 중복 처리 방지, 오프셋 커밋은 처리 완료 후
 - [ ] `[api]` 재시도 토픽 + DLT: 일시 오류는 `*.retry`로 지연 재처리, 반복 실패는 `*.dlt`로 격리 → 어드민에서 DLT 메시지 조회·재처리
 - [ ] `[api]` **결제 타임아웃**: 주문에 `payment_deadline_at` 저장 → 워커가 주기적으로 기한 지난 주문을 `FOR UPDATE SKIP LOCKED`로 집어 `PAYMENT_TIMEOUT` + 재고 예약 해제

@@ -31,3 +31,4 @@
 - [ADR 0011: 협업 방식: Claude가 아주 작게 구현하고 내가 세밀하게 리뷰한다](0011-협업-방식.md)
 - [ADR 0012: 스펙 우선 툴체인 확정: Hey API nestjs 타입 + express-openapi-validator + Problem Details 필터](0012-스펙-우선-툴체인-확정.md)
 - [ADR 0013: 스펙 공통 규약: camelCase + RFC 9457 Problem Details + AIP-158 페이지네이션, Redocly 린트로 강제](0013-스펙-공통-규약.md)
+- [ADR 0014: 배포: 로컬 PC + Cloudflare Tunnel, pull 방식 배포](0014-배포-로컬-PC와-Cloudflare-Tunnel.md)

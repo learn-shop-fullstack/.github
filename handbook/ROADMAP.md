@@ -32,10 +32,11 @@
 - [x] ~~`[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인~~ — 용량 부족으로 쓰지 않음 (2026-10-28, shop-sim-infra#1, ADR 0014)
 - [ ] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리 (shop-sim-infra#2)
 - [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (shop-sim-api#5)
-- [ ] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (shop-sim-api#3)
-- [ ] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인 (shop-sim-api#4)
+- [x] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (2026-10-28, shop-sim-api#3, ADR 0005 유지)
+- [x] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인 (2026-10-28, shop-sim-api#4, ADR 0004 유지)
 - [x] `[api]` 스펙 우선 툴체인 POC (엔드포인트 1개): Hey API `nestjs` 플러그인으로 컨트롤러 타입 생성 + `express-openapi-validator`로 요청·응답 검증. 확인할 것: 스펙 변경 시 빌드 실패하는지, 잘못된 요청이 400(Problem Details)으로 떨어지는지, OpenAPI 3.1 지원 범위 (2026-10-28, shop-sim-api#2, ADR 0012)
-- [ ] `[api]` 도메인 모델(ERD) 초안 — 아래 "도메인 모델" 참고 (shop-sim-api#8)
+- [x] `[api]` 도메인 모델(ERD) 초안 — 아래 "도메인 모델" 참고 (2026-10-28, shop-sim-api#8, shop-sim-api `db/ERD.md`)
+- [x] `[api]` 인증 라이브러리 POC: Better Auth — Nest 연동, ERD 규칙 스키마, DB 세션, 하위 도메인 쿠키, 운영자 계정 분리 (2026-10-28, shop-sim-api#17, ADR 0015)
 - [x] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제 (2026-10-28, shop-sim-api#6, ADR 0013)
 - [ ] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정 (shop-sim-api#7)
 - [ ] `[web]` API 클라이언트 생성 도구 결정 (shop-sim-web#1)
@@ -72,7 +73,7 @@
 - [ ] `[api]` 계정 모델: 모든 일반 계정은 구매자. **판매자는 같은 계정에 판매자 프로필(Seller)을 추가**하는 방식(1계정 1스토어). 플랫폼 운영자(ADMIN) 계정은 일반 계정과 분리
   - 권한 판단은 "역할 문자열"이 아니라 "이 요청이 어떤 컨텍스트(구매/판매)인가 + 리소스 소유자인가"로 한다
   - 정책: 자기 스토어 상품은 구매·리뷰·쿠폰 사용 불가 (리뷰 조작·자전거래 방지)
-- [ ] `[api]` 인증: 세션 vs JWT 결정, 로그인·로그아웃·토큰 갱신
+- [ ] `[api]` 인증: Better Auth 연결(ADR 0015 — DB 세션으로 결정, JWT 안 씀), 이메일 가입·로그인·로그아웃, 운영자 인스턴스(가입 차단, 시드로 첫 운영자)
 - [ ] `[api]` **소셜 로그인**: Google, Kakao, Naver (OAuth 2.0 Authorization Code + PKCE, 계정 연결)
 - [ ] `[api]` 판매자 입점: 신청(상호, 사업자 정보, 정산 계좌는 마스킹 저장) → 어드민 승인/반려 → 스토어 생성
 - [ ] `[api]` 판매자 스토어 정보: 스토어명, 소개, 브랜드 이미지, 배송 정책(기본 배송비, 무료배송 기준, 출고지)

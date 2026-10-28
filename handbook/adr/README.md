@@ -29,3 +29,4 @@
 - [ADR 0009: 결제: PG 추상화 + 토스페이먼츠 테스트 모드 / 모의 PG](0009-결제.md)
 - [ADR 0010: 배포: Oracle Cloud Always Free ARM, 무료 구성](0010-배포.md)
 - [ADR 0011: 협업 방식: Claude가 아주 작게 구현하고 내가 세밀하게 리뷰한다](0011-협업-방식.md)
+- [ADR 0012: 스펙 우선 툴체인 확정: Hey API nestjs 타입 + express-openapi-validator + Problem Details 필터](0012-스펙-우선-툴체인-확정.md)

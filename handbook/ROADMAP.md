@@ -24,20 +24,21 @@
 - [x] `[infra]` 배포: **무료 구성** — Oracle Cloud Always Free ARM 단일 VM으로 시작, 역할별 분리 가능하게 구성 (2026-10-28)
 - [x] 레포 구조: **5개 레포 + 조직 메타 레포(`.github`)**, 회사처럼 운영 (2026-10-28)
 - [x] `[api]` 결제: **PG 추상화 + 토스페이먼츠(테스트 모드) / 모의 PG 두 어댑터** (2026-10-28)
-- [ ] GitHub 조직 생성, 레포 6개 생성, 공통 설정
-  - 브랜치 보호: main 직접 푸시 금지, PR + CI 통과 필수, 리뷰 1건 필수(셀프 리뷰 체크리스트로 대체)
+- [x] GitHub 조직 생성, 레포 6개 생성, 공통 설정 (2026-10-28, .github#6)
+  - 레포는 public (Free 플랜은 private 레포에 ruleset 불가)
+  - main 보호 ruleset: 직접 푸시·삭제·force push 금지, PR 필수, squash만 허용, 필수 승인 0(자기 PR은 승인 불가 → 셀프 리뷰 체크리스트로 대체). CI 통과 필수는 1단계에서 추가
   - 라벨(유형·레포·단계), GitHub Projects 보드(Backlog / Ready / In Progress / In Review / Done)
   - 조직 공통 PR·이슈 템플릿 (`.github` 레포)
-- [ ] `[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인
-- [ ] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리
-- [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음)
-- [ ] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인
-- [ ] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인
-- [ ] `[api]` 스펙 우선 툴체인 POC (엔드포인트 1개): Hey API `nestjs` 플러그인으로 컨트롤러 타입 생성 + `express-openapi-validator`로 요청·응답 검증. 확인할 것: 스펙 변경 시 빌드 실패하는지, 잘못된 요청이 400(Problem Details)으로 떨어지는지, OpenAPI 3.1 지원 범위
-- [ ] `[api]` 도메인 모델(ERD) 초안 — 아래 "도메인 모델" 참고
-- [ ] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제
-- [ ] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정
-- [ ] `[web]` API 클라이언트 생성 도구 결정
+- [ ] `[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인 (shop-sim-infra#1)
+- [ ] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리 (shop-sim-infra#2)
+- [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (shop-sim-api#5)
+- [ ] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (shop-sim-api#3)
+- [ ] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인 (shop-sim-api#4)
+- [ ] `[api]` 스펙 우선 툴체인 POC (엔드포인트 1개): Hey API `nestjs` 플러그인으로 컨트롤러 타입 생성 + `express-openapi-validator`로 요청·응답 검증. 확인할 것: 스펙 변경 시 빌드 실패하는지, 잘못된 요청이 400(Problem Details)으로 떨어지는지, OpenAPI 3.1 지원 범위 (shop-sim-api#2)
+- [ ] `[api]` 도메인 모델(ERD) 초안 — 아래 "도메인 모델" 참고 (shop-sim-api#8)
+- [ ] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제 (shop-sim-api#6)
+- [ ] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정 (shop-sim-api#7)
+- [ ] `[web]` API 클라이언트 생성 도구 결정 (shop-sim-web#1)
 
 ## 1단계 — 뼈대 배포 (Walking Skeleton)
 

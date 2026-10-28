@@ -34,9 +34,9 @@
 - [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (shop-sim-api#5)
 - [ ] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (shop-sim-api#3)
 - [ ] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인 (shop-sim-api#4)
-- [ ] `[api]` 스펙 우선 툴체인 POC (엔드포인트 1개): Hey API `nestjs` 플러그인으로 컨트롤러 타입 생성 + `express-openapi-validator`로 요청·응답 검증. 확인할 것: 스펙 변경 시 빌드 실패하는지, 잘못된 요청이 400(Problem Details)으로 떨어지는지, OpenAPI 3.1 지원 범위 (shop-sim-api#2)
+- [x] `[api]` 스펙 우선 툴체인 POC (엔드포인트 1개): Hey API `nestjs` 플러그인으로 컨트롤러 타입 생성 + `express-openapi-validator`로 요청·응답 검증. 확인할 것: 스펙 변경 시 빌드 실패하는지, 잘못된 요청이 400(Problem Details)으로 떨어지는지, OpenAPI 3.1 지원 범위 (2026-10-28, shop-sim-api#2, ADR 0012)
 - [ ] `[api]` 도메인 모델(ERD) 초안 — 아래 "도메인 모델" 참고 (shop-sim-api#8)
-- [ ] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제 (shop-sim-api#6)
+- [x] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제 (2026-10-28, shop-sim-api#6, ADR 0013)
 - [ ] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정 (shop-sim-api#7)
 - [ ] `[web]` API 클라이언트 생성 도구 결정 (shop-sim-web#1)
 

@@ -31,7 +31,7 @@
   - 조직 공통 PR·이슈 템플릿 (`.github` 레포)
 - [x] ~~`[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인~~ — 용량 부족으로 쓰지 않음 (2026-10-28, shop-sim-infra#1, ADR 0014)
 - [x] `[infra]` ARM(arm64) 호환 확인: 사용하는 모든 컨테이너 이미지, `@confluentinc/kafka-javascript`의 arm64 바이너리 (2026-10-28, shop-sim-infra#2 — 이미지·태그 표는 이슈 댓글, MinIO는 배포 중단으로 SeaweedFS로 대체)
-- [ ] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (shop-sim-api#5)
+- [x] `[api]` 토스페이먼츠 개발자센터 가입, 테스트 키 발급(테스트 모드 — 실제 결제 없음) (2026-10-29, shop-sim-api#5 — 시크릿 키는 api `.env`, 클라이언트 키는 5단계 web에서 사용)
 - [x] `[api]` Drizzle POC: 스키마 1개 → `drizzle-kit generate`로 SQL 마이그레이션 생성·리뷰 → 적용, `for('update', { skipLocked: true })` 동작 확인 (2026-10-28, shop-sim-api#3, ADR 0005 유지)
 - [x] `[api]` Kafka POC: 단일 노드에 토픽 생성 → 프로듀서·컨슈머 1개씩, 오프셋 수동 커밋 확인 (2026-10-28, shop-sim-api#4, ADR 0004 유지)
 - [x] `[api]` 스펙 우선 툴체인 POC (엔드포인트 1개): Hey API `nestjs` 플러그인으로 컨트롤러 타입 생성 + `express-openapi-validator`로 요청·응답 검증. 확인할 것: 스펙 변경 시 빌드 실패하는지, 잘못된 요청이 400(Problem Details)으로 떨어지는지, OpenAPI 3.1 지원 범위 (2026-10-28, shop-sim-api#2, ADR 0012)
@@ -39,7 +39,7 @@
 - [x] `[api]` 인증 라이브러리 POC: Better Auth — Nest 연동, ERD 규칙 스키마, DB 세션, 하위 도메인 쿠키, 운영자 계정 분리 (2026-10-28, shop-sim-api#17, ADR 0015)
 - [x] `[api]` 스펙 공통 규약 정의: 에러 응답(Problem Details), 커서 페이지네이션, 네이밍 규칙 → 린트 룰로 강제 (2026-10-28, shop-sim-api#6, ADR 0013)
 - [x] `[api]` 이벤트 계약 방식: AsyncAPI로 Kafka 이벤트를 스펙 우선 관리, 호환성 검사 도구 선정 (2026-10-28, shop-sim-api#7, ADR 0016)
-- [ ] `[web]` API 클라이언트 생성 도구 결정 (shop-sim-web#1)
+- [x] `[web]` API 클라이언트 생성 도구 결정: **Hey API** + TanStack Query (2026-10-29, shop-sim-web#1, ADR 0017)
 
 ## 1단계 — 뼈대 배포 (Walking Skeleton)
 
@@ -53,7 +53,7 @@
 - [ ] `[api]` CI: 린트 → 생성 → 테스트 → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver)
 - [ ] `[web]` 스펙 기반 목 서버로 로컬 개발 환경 구성
 - [ ] `[web]` 모노레포 세팅 (pnpm, Turborepo, lint, tsconfig)
-- [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR
+- [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR. 서버 컴포넌트용 요청별 클라이언트 함수와 오류 정규화 인터셉터 구현·확인(ADR 0017)
 - [ ] `[web]` 스토어: 상품 목록·상세 (SSR)
 - [ ] `[web]` 셀러센터·어드민: 빈 레이아웃 + 상품 목록 (AG Grid Community, 클라이언트 사이드)
 - [ ] `[infra]` 로컬 PC 배포: docker-compose **역할별 파일**(`compose.app.yml` / `compose.data.yml` / `compose.obs.yml`), 서비스 주소는 전부 환경 변수

@@ -46,7 +46,7 @@
 목표: 상품 1개가 DB → API → 스토어/셀러센터/어드민 화면까지 흐르고, 양쪽 레포 모두 push 하면 자동 배포된다.
 
 - [x] `[infra]` 로컬 개발용 docker-compose (Postgres, Redis, SeaweedFS(S3 호환, R2 대역), Kafka KRaft 단일 노드 + Kafka UI(kafbat), OpenSearch 단일 노드 + Nori 플러그인 + OpenSearch Dashboards) — 각 앱 레포가 이 compose를 띄워 개발 (2026-10-29, shop-sim-infra#4 — 사용법은 `compose/local/README.md`. 버킷·토픽 자동 생성 꺼짐 → 토픽 생성 주체는 api에서 결정)
-- [ ] `[api]` Nest 프로젝트 세팅 (`api`, `worker` 앱)
+- [x] `[api]` Nest 프로젝트 세팅 (`api`, `worker` 앱) (2026-10-29, shop-sim-api#24 — Node 26 LTS·ESM·`tsc` 빌더·Zod 설정 검증·oxlint·Vitest. Kafka 클라이언트의 Node 26 사전 빌드 부재는 3단계에서 재확인)
 - [ ] `[api]` `openapi/` 스펙 작성: 헬스체크, 상품 단건/목록 조회
 - [ ] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인
 - [ ] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트

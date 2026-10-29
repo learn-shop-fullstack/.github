@@ -51,9 +51,10 @@
 - [x] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인 (2026-10-29, shop-sim-api#28 — `redocly bundle` → Hey API, 생성물은 커밋하지 않음)
 - [x] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트 (검증기를 켠 계약 테스트 + 라우트 대조 테스트(스펙 paths ↔ 등록 라우트, 양방향)로 타입이 못 잡는 경로·상태 코드·누락 operation을 머지 전에 잡는다) (2026-10-29, shop-sim-api#30 — 계약 테스트는 실제 Postgres에서 `pnpm test:contract`. `products`는 FK 없이 시작해 2단계에서 건다. 앱 산출물 경로 `dist/apps/<앱>/apps/<앱>/src/main.js`, Postgres 18 필요 → 배포 항목에서 반영. 후속 메모는 api#30 코멘트)
 - [x] `[api]` CI: 린트 → 생성 → 테스트(단위 + 계약 테스트용 Postgres 서비스 컨테이너, `db:generate` 후 변경 없음 검사) → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver) (2026-10-29, shop-sim-api#32 — 마이그레이션 검사는 `pnpm db:check`, 스펙 버전의 출처는 `info.version` 하나이고 내용이 바뀌면 PR에서 올렸는지 검사. `@learn-shop-fullstack/shop-sim-api-openapi@0.1.0` 배포, 태그 `openapi-v0.1.0`. 패키지는 private로 생성됨)
+- [x] `[web]` 모노레포 세팅 (pnpm, Turborepo, lint, tsconfig) (2026-10-29, shop-sim-web#4 — 목 서버도 루트 `package.json`·의존성이 필요해 목 서버보다 먼저 했다. 내부 패키지 `@shop-sim/*`는 빌드 없이 TS 소스를 내보내고 변환은 앱의 번들러가 한다. TypeScript·oxlint·turbo는 루트에만 설치, typecheck·lint는 transit 노드로 병렬로 돌면서 의존 패키지 변경 시 캐시 무효화)
 - [ ] `[web]` 스펙 기반 목 서버로 로컬 개발 환경 구성
-- [ ] `[web]` 모노레포 세팅 (pnpm, Turborepo, lint, tsconfig)
 - [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR. 서버 컴포넌트용 요청별 클라이언트 함수와 오류 정규화 인터셉터 구현·확인(ADR 0017). 설치에는 공개 패키지여도 토큰과 `.npmrc` 스코프 레지스트리가 필요하다. 패키지 공개 여부(공개 전환은 되돌릴 수 없음)와 web CI의 읽기 권한 부여 방식을 여기서 정한다 (api#32)
+- [ ] `[web]` CI: 린트 → 타입 검사 → 빌드, main 보호 ruleset에 CI 통과 필수 추가. 스펙 패키지 읽기 권한은 api-client 항목에서 정한 방식을 따른다 (web#4)
 - [ ] `[web]` 스토어: 상품 목록·상세 (SSR)
 - [ ] `[web]` 셀러센터·어드민: 빈 레이아웃 + 상품 목록 (AG Grid Community, 클라이언트 사이드)
 - [ ] `[infra]` 로컬 PC 배포: docker-compose **역할별 파일**(`compose.app.yml` / `compose.data.yml` / `compose.obs.yml`), 서비스 주소는 전부 환경 변수

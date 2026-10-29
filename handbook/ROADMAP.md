@@ -49,8 +49,8 @@
 - [x] `[api]` Nest 프로젝트 세팅 (`api`, `worker` 앱) (2026-10-29, shop-sim-api#24 — Node 26 LTS·ESM·`tsc` 빌더·Zod 설정 검증·oxlint·Vitest. Kafka 클라이언트의 Node 26 사전 빌드 부재는 3단계에서 재확인)
 - [x] `[api]` `openapi/` 스펙 작성: 헬스체크, 상품 단건/목록 조회 (2026-10-29, shop-sim-api#26 — 경로 접두어 없음(API는 하위 도메인), 스펙 린트는 `pnpm lint`에 포함)
 - [x] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인 (2026-10-29, shop-sim-api#28 — `redocly bundle` → Hey API, 생성물은 커밋하지 않음)
-- [ ] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트 (검증기를 켠 계약 테스트 + 라우트 대조 테스트(스펙 paths ↔ 등록 라우트, 양방향)로 타입이 못 잡는 경로·상태 코드·누락 operation을 머지 전에 잡는다)
-- [ ] `[api]` CI: 린트 → 생성 → 테스트 → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver)
+- [x] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트 (검증기를 켠 계약 테스트 + 라우트 대조 테스트(스펙 paths ↔ 등록 라우트, 양방향)로 타입이 못 잡는 경로·상태 코드·누락 operation을 머지 전에 잡는다) (2026-10-29, shop-sim-api#30 — 계약 테스트는 실제 Postgres에서 `pnpm test:contract`. `products`는 FK 없이 시작해 2단계에서 건다. 앱 산출물 경로 `dist/apps/<앱>/apps/<앱>/src/main.js`, Postgres 18 필요 → 배포 항목에서 반영. 후속 메모는 api#30 코멘트)
+- [ ] `[api]` CI: 린트 → 생성 → 테스트(단위 + 계약 테스트용 Postgres 서비스 컨테이너, `db:generate` 후 변경 없음 검사) → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver)
 - [ ] `[web]` 스펙 기반 목 서버로 로컬 개발 환경 구성
 - [ ] `[web]` 모노레포 세팅 (pnpm, Turborepo, lint, tsconfig)
 - [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR. 서버 컴포넌트용 요청별 클라이언트 함수와 오류 정규화 인터셉터 구현·확인(ADR 0017)

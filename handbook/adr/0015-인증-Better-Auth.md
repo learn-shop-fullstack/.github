@@ -2,6 +2,7 @@
 
 - 상태: 채택
 - 날짜: 2026-10-28
+- 정정: 2026-10-29 인증 경로 표기에서 `/api` 접두어를 뺐다. API를 하위 도메인으로 공개해 경로 접두어를 두지 않기로 했기 때문이다(shop-sim-api#26). 결정 내용은 같다
 
 ## 맥락
 
@@ -14,7 +15,7 @@
 - **SSO**: 일반 계정 세션 쿠키를 상위 도메인에 걸어 스토어·셀러센터가 공유한다. 신뢰 출처 목록 밖의 Origin은 거부된다. staging은 별도 쿠키 도메인을 쓴다.
 - **운영자 계정**: 별도 Better Auth 인스턴스(별도 경로·`admin_*` 테이블·쿠키 이름·비밀값). 운영자 쿠키는 운영자 호스트에만 건다. admin 플러그인의 `role` 방식은 쓰지 않는다.
 - **스키마**: core 테이블을 Drizzle로 직접 정의해 ERD 규칙(복수 테이블, `uuidv7()`, `timestamptz`, 제약 이름)을 따른다. 이메일 가입도 `accounts`의 한 행(`credential`)이다.
-- **스펙 우선의 예외**: `/api/auth/*`, `/api/admin/auth/*`는 Better Auth가 계약을 소유한다. OpenAPI 스펙에 넣지 않고 런타임 검증에서 제외하며, 오류 형식은 Better Auth의 `{ message, code }`다. web은 이 경로에 Better Auth 클라이언트를 쓰고 서버와 같은 버전으로 고정한다.
+- **스펙 우선의 예외**: `/auth/*`, `/admin/auth/*`는 Better Auth가 계약을 소유한다. OpenAPI 스펙에 넣지 않고 런타임 검증에서 제외하며, 오류 형식은 Better Auth의 `{ message, code }`다. web은 이 경로에 Better Auth 클라이언트를 쓰고 서버와 같은 버전으로 고정한다.
 
 ## 결과
 

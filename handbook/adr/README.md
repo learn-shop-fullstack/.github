@@ -34,3 +34,4 @@
 - [ADR 0014: 배포: 로컬 PC + Cloudflare Tunnel, pull 방식 배포](0014-배포-로컬-PC와-Cloudflare-Tunnel.md)
 - [ADR 0015: 인증: Better Auth, DB 세션, 운영자는 별도 인스턴스](0015-인증-Better-Auth.md)
 - [ADR 0016: 이벤트 계약: CloudEvents binary 봉투, 양방향 호환성 검사, Schema Registry 없음](0016-이벤트-계약.md)
+- [ADR 0017: API 클라이언트 생성 도구: Hey API, 서버 호출과 오류 정규화는 공용 코드로](0017-API-클라이언트-생성-도구.md)

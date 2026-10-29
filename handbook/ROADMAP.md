@@ -48,8 +48,8 @@
 - [x] `[infra]` 로컬 개발용 docker-compose (Postgres, Redis, SeaweedFS(S3 호환, R2 대역), Kafka KRaft 단일 노드 + Kafka UI(kafbat), OpenSearch 단일 노드 + Nori 플러그인 + OpenSearch Dashboards) — 각 앱 레포가 이 compose를 띄워 개발 (2026-10-29, shop-sim-infra#4 — 사용법은 `compose/local/README.md`. 버킷·토픽 자동 생성 꺼짐 → 토픽 생성 주체는 api에서 결정)
 - [x] `[api]` Nest 프로젝트 세팅 (`api`, `worker` 앱) (2026-10-29, shop-sim-api#24 — Node 26 LTS·ESM·`tsc` 빌더·Zod 설정 검증·oxlint·Vitest. Kafka 클라이언트의 Node 26 사전 빌드 부재는 3단계에서 재확인)
 - [x] `[api]` `openapi/` 스펙 작성: 헬스체크, 상품 단건/목록 조회 (2026-10-29, shop-sim-api#26 — 경로 접두어 없음(API는 하위 도메인), 스펙 린트는 `pnpm lint`에 포함)
-- [ ] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인
-- [ ] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트
+- [x] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인 (2026-10-29, shop-sim-api#28 — `redocly bundle` → Hey API, 생성물은 커밋하지 않음)
+- [ ] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트 (검증기를 켠 계약 테스트 + 라우트 대조 테스트(스펙 paths ↔ 등록 라우트, 양방향)로 타입이 못 잡는 경로·상태 코드·누락 operation을 머지 전에 잡는다)
 - [ ] `[api]` CI: 린트 → 생성 → 테스트 → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver)
 - [ ] `[web]` 스펙 기반 목 서버로 로컬 개발 환경 구성
 - [ ] `[web]` 모노레포 세팅 (pnpm, Turborepo, lint, tsconfig)

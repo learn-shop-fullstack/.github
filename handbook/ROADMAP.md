@@ -26,7 +26,7 @@
 - [x] `[api]` 결제: **PG 추상화 + 토스페이먼츠(테스트 모드) / 모의 PG 두 어댑터** (2026-10-28)
 - [x] GitHub 조직 생성, 레포 6개 생성, 공통 설정 (2026-10-28, .github#6)
   - 레포는 public (Free 플랜은 private 레포에 ruleset 불가)
-  - main 보호 ruleset: 직접 푸시·삭제·force push 금지, PR 필수, squash만 허용, 필수 승인 0(자기 PR은 승인 불가 → 셀프 리뷰 체크리스트로 대체). CI 통과 필수는 1단계에서 추가
+  - main 보호 ruleset: 직접 푸시·삭제·force push 금지, PR 필수, squash만 허용, 필수 승인 0(자기 PR은 승인 불가 → 셀프 리뷰 체크리스트로 대체). CI 통과 필수는 각 레포에 CI가 생길 때 추가 (api: 2026-10-29 shop-sim-api#32, `ci` 체크 + strict)
   - 라벨(유형·레포·단계), GitHub Projects 보드(Backlog / Ready / In Progress / In Review / Done)
   - 조직 공통 PR·이슈 템플릿 (`.github` 레포)
 - [x] ~~`[infra]` Oracle Cloud 계정 생성(홈 리전 선택), ARM 인스턴스 생성 가능 여부 확인~~ — 용량 부족으로 쓰지 않음 (2026-10-28, shop-sim-infra#1, ADR 0014)
@@ -50,10 +50,10 @@
 - [x] `[api]` `openapi/` 스펙 작성: 헬스체크, 상품 단건/목록 조회 (2026-10-29, shop-sim-api#26 — 경로 접두어 없음(API는 하위 도메인), 스펙 린트는 `pnpm lint`에 포함)
 - [x] `[api]` 스펙 린트 + 서버 인터페이스 생성 파이프라인 (2026-10-29, shop-sim-api#28 — `redocly bundle` → Hey API, 생성물은 커밋하지 않음)
 - [x] `[api]` 생성된 인터페이스로 API 구현 + 계약 테스트 (검증기를 켠 계약 테스트 + 라우트 대조 테스트(스펙 paths ↔ 등록 라우트, 양방향)로 타입이 못 잡는 경로·상태 코드·누락 operation을 머지 전에 잡는다) (2026-10-29, shop-sim-api#30 — 계약 테스트는 실제 Postgres에서 `pnpm test:contract`. `products`는 FK 없이 시작해 2단계에서 건다. 앱 산출물 경로 `dist/apps/<앱>/apps/<앱>/src/main.js`, Postgres 18 필요 → 배포 항목에서 반영. 후속 메모는 api#30 코멘트)
-- [ ] `[api]` CI: 린트 → 생성 → 테스트(단위 + 계약 테스트용 Postgres 서비스 컨테이너, `db:generate` 후 변경 없음 검사) → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver)
+- [x] `[api]` CI: 린트 → 생성 → 테스트(단위 + 계약 테스트용 Postgres 서비스 컨테이너, `db:generate` 후 변경 없음 검사) → main 머지 시 **스펙을 버전 패키지로 배포**(GitHub Packages, semver) (2026-10-29, shop-sim-api#32 — 마이그레이션 검사는 `pnpm db:check`, 스펙 버전의 출처는 `info.version` 하나이고 내용이 바뀌면 PR에서 올렸는지 검사. `@learn-shop-fullstack/shop-sim-api-openapi@0.1.0` 배포, 태그 `openapi-v0.1.0`. 패키지는 private로 생성됨)
 - [ ] `[web]` 스펙 기반 목 서버로 로컬 개발 환경 구성
 - [ ] `[web]` 모노레포 세팅 (pnpm, Turborepo, lint, tsconfig)
-- [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR. 서버 컴포넌트용 요청별 클라이언트 함수와 오류 정규화 인터셉터 구현·확인(ADR 0017)
+- [ ] `[web]` `packages/api-client`: 스펙 패키지 버전을 고정해 받아 생성, 버전 업그레이드는 별도 PR. 서버 컴포넌트용 요청별 클라이언트 함수와 오류 정규화 인터셉터 구현·확인(ADR 0017). 설치에는 공개 패키지여도 토큰과 `.npmrc` 스코프 레지스트리가 필요하다. 패키지 공개 여부(공개 전환은 되돌릴 수 없음)와 web CI의 읽기 권한 부여 방식을 여기서 정한다 (api#32)
 - [ ] `[web]` 스토어: 상품 목록·상세 (SSR)
 - [ ] `[web]` 셀러센터·어드민: 빈 레이아웃 + 상품 목록 (AG Grid Community, 클라이언트 사이드)
 - [ ] `[infra]` 로컬 PC 배포: docker-compose **역할별 파일**(`compose.app.yml` / `compose.data.yml` / `compose.obs.yml`), 서비스 주소는 전부 환경 변수

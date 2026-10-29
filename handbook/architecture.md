@@ -86,10 +86,10 @@ learn-fullstack/        (git 레포 아님, 작업 공간)
 | Postgres | 1GB |
 | Redis | 0.2GB |
 | Kafka | 1GB (힙 512MB) |
-| OpenSearch | 1.5GB (힙 768MB) |
+| OpenSearch | 2GB (힙 768MB. 번들 플러그인 포함 대기 1.39GiB 실측, shop-sim-infra#4) |
 | Node 앱 4개 + Next.js | 2GB |
 | 관측성 (Prometheus, Loki, OTel Collector) | 1.5GB |
-| 프록시·터널, 여유 | 나머지 약 4.5GB |
+| 프록시·터널, 여유 | 나머지 약 4.3GB |
 
 Kafka UI, OpenSearch Dashboards는 상시로 띄우지 않고 필요할 때만 실행한다.
 

@@ -38,3 +38,4 @@
 - [ADR 0018: 웹 앱의 API 주소: 빌드에 박지 않고 실행 시점에 환경 변수로 주입한다](0018-웹-API-주소-실행-시점-주입.md)
 - [ADR 0019: SPA 빌드 도구: Vite](0019-SPA-빌드-도구-Vite.md)
 - [ADR 0020: 웹 앱의 API 주소: 빌드 시 프레임워크 관례대로 주입한다](0020-웹-API-주소-빌드-시-주입.md)
+- [ADR 0021: SPA 라우터: TanStack Router](0021-SPA-라우터-TanStack-Router.md)

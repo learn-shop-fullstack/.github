@@ -41,3 +41,4 @@
 - [ADR 0021: SPA 라우터: TanStack Router](0021-SPA-라우터-TanStack-Router.md)
 - [ADR 0022: Cloudflare Tunnel 구성과 하위 도메인](0022-Cloudflare-Tunnel-구성과-하위-도메인.md)
 - [ADR 0023: 비밀값 관리: PC의 권한 제한된 파일이 원본, 비밀번호 관리자에 백업](0023-비밀값-관리.md)
+- [ADR 0024: 이미지 빌드와 GHCR 게시: arm64 호스팅 러너, 커밋 SHA 태그, 공개 패키지](0024-이미지-빌드와-GHCR-게시.md)

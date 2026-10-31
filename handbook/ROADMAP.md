@@ -62,7 +62,7 @@
 - [x] `[infra]` Cloudflare Tunnel + `p-stack.dev` 하위 도메인 구성(api / store / seller / admin). TLS는 Cloudflare 엣지, 리버스 프록시(Caddy) 필요 여부 결정 (2026-10-31, shop-sim-infra#10 — 호스트명 `shop-{api,store,seller,admin}.p-stack.dev`, staging은 `shop-staging-…`(무료 인증서가 한 단계 하위 도메인만 덮는다), 환경마다 locally-managed 터널 하나, ingress 원본은 infra `cloudflared/<환경>.yml`, 리버스 프록시 없음 → ADR 0022. 설정의 `tunnel`은 UUID여야 `cert.pem` 없이 뜬다. 두 터널과 CNAME 8개 생성, 앱이 없어 502(내리면 530)까지 확인. seller·admin 정적 서버는 8080)
 - [ ] `[infra]` 메모리 예산 설정: 컨테이너별 메모리 제한, Kafka·OpenSearch 힙 크기 고정, Postgres 튜닝 → 합계가 메모리 예산(12GB) 안에 들어오는지 확인
 - [ ] `[infra]` 네트워크: 외부 공개는 터널로만(PC에 열린 포트 없음), 나머지는 compose 내부 네트워크
-- [ ] `[infra]` 비밀값 관리: 레포에는 `.env.example`만, 실제 값은 GitHub Secrets + PC의 권한 제한된 파일
+- [x] `[infra]` 비밀값 관리: 레포에는 `.env.example`만, 실제 값은 GitHub Secrets + PC의 권한 제한된 파일 (2026-10-31, shop-sim-infra#12 — 운영 원본은 PC의 `~/.config/shop-sim/<환경>/`(디렉터리 700, 파일 600)에 compose env와 터널 자격 증명, 백업은 비밀번호 관리자 → ADR 0023. Postgres 비밀번호는 infra `scripts/secrets/init-env.sh`가 무작위로 만들고 기존 파일은 덮어쓰지 않는다. GitHub Secrets는 CI가 쓰는 값만 두며 지금은 없고, 빌드 공개 값(API 주소)은 Variables. org 레포 6개에 secret scanning·push protection을 켰다(임의 문자열 비밀번호는 못 잡는다). `cert.pem`은 백업하지 않고 잃으면 다시 로그인)
 - [ ] `[infra]` Postgres 일일 백업 → 외부 스토리지(R2), 복구 리허설 1회
 - [ ] `[infra]` **재사용 워크플로**: arm64 이미지 빌드(ARM 러너 또는 buildx) → GHCR 푸시. PC의 배포 에이전트가 새 이미지를 받아 교체(pull 방식). 앱 레포는 이 워크플로를 호출만 한다
 - [ ] `[infra]` 환경 분리: production + staging(같은 PC의 별도 compose 프로젝트)

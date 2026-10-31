@@ -79,19 +79,21 @@ learn-fullstack/        (git 레포 아님, 작업 공간)
 | 부하 생성(shop-sim-loadtest) | 로컬 PC(운영과 같은 기계) | CPU·메모리를 나눠 쓰므로 측정은 그 조건으로 해석 |
 | 도메인 | `p-stack.dev`(Cloudflare DNS) | 하위 도메인 구성은 1단계 |
 
-**12GB 메모리 예산 (목표치, 운영 compose의 메모리 상한 합계. 1단계에서 실측 후 조정)**
+**12GB 메모리 예산 (운영 compose의 메모리 상한 합계. 지금 상한 합계 5.95GiB. 데이터 서비스는 실측 완료(shop-sim-infra#21), 앱은 첫 이미지 뒤 실측)**
 
-| 구성 | 예산 |
-|---|---|
-| Postgres | 1GB |
-| Redis | 0.2GB |
-| Kafka | 1GB (힙 512MB) |
-| OpenSearch | 2GB (힙 768MB. 번들 플러그인 포함 대기 1.39GiB 실측, shop-sim-infra#4) |
-| Node 앱 4개 + Next.js | 2GB |
-| 관측성 (Prometheus, Loki, OTel Collector) | 1.5GB |
-| 프록시·터널, 여유 | 나머지 약 4.3GB |
+| 구성 | 예산 | 실측 (가벼운 부하) |
+|---|---|---|
+| Postgres | 1GB (shared_buffers 256MB, effective_cache_size 640MB, max_connections 50) | pgbench 20연결 약 190MiB |
+| Redis | 0.2GB (maxmemory 150mb) | 약 10MiB |
+| Kafka | 1GB (힙 512MB) | 410~520MiB |
+| OpenSearch | 2GB (힙 768MB) | 1.47~1.52GiB (번들 플러그인 포함, shop-sim-infra#4 대기 1.39GiB) |
+| Node 앱 4개 + Next.js | 2GB (지금 상한 1.62GiB: api·worker·store 각 512MiB, seller·admin 정적 각 64MiB) | 미측정 |
+| 관측성 (Prometheus, Loki, OTel Collector) | 1.5GB | 13단계 |
+| 프록시·터널, 여유 | 나머지 약 4.3GB (cloudflared 128MiB) | |
 
-위 표는 production 한 환경이다. staging은 상한을 줄인 구성으로 약 3.3GiB를 따로 쓴다(ADR 0026). 컨테이너 VM(15.7GiB) 안의 상한 합계는 production 12GB + staging 약 3.3GiB이고, 개발 스택은 개발할 때만 띄워 합계에 넣지 않는다.
+실측 값은 `docker stats` 기준이라 회수 가능한 파일 캐시 일부는 빠진다. Postgres는 부하 중 파일 캐시가 상한까지 차지만 OOM 없이 회수된다.
+
+위 표는 production 한 환경이다. staging은 상한을 줄인 구성으로 약 3.3GiB를 따로 쓴다(ADR 0026, 대기 실측 shop-sim-infra#19). 컨테이너 VM(15.7GiB) 안의 상한 합계는 production 12GB + staging 약 3.3GiB이고, 개발 스택은 개발할 때만 띄워 합계에 넣지 않는다.
 
 Kafka UI, OpenSearch Dashboards는 상시로 띄우지 않고 필요할 때만 실행한다.
 

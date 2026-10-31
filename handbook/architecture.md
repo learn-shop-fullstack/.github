@@ -91,6 +91,8 @@ learn-fullstack/        (git 레포 아님, 작업 공간)
 | 관측성 (Prometheus, Loki, OTel Collector) | 1.5GB |
 | 프록시·터널, 여유 | 나머지 약 4.3GB |
 
+위 표는 production 한 환경이다. staging은 상한을 줄인 구성으로 약 3.3GiB를 따로 쓴다(ADR 0026). 컨테이너 VM(15.7GiB) 안의 상한 합계는 production 12GB + staging 약 3.3GiB이고, 개발 스택은 개발할 때만 띄워 합계에 넣지 않는다.
+
 Kafka UI, OpenSearch Dashboards는 상시로 띄우지 않고 필요할 때만 실행한다.
 
 **단계별 토폴로지**

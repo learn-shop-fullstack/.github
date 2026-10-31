@@ -39,3 +39,4 @@
 - [ADR 0019: SPA 빌드 도구: Vite](0019-SPA-빌드-도구-Vite.md)
 - [ADR 0020: 웹 앱의 API 주소: 빌드 시 프레임워크 관례대로 주입한다](0020-웹-API-주소-빌드-시-주입.md)
 - [ADR 0021: SPA 라우터: TanStack Router](0021-SPA-라우터-TanStack-Router.md)
+- [ADR 0022: Cloudflare Tunnel 구성과 하위 도메인](0022-Cloudflare-Tunnel-구성과-하위-도메인.md)
